@@ -10,9 +10,4 @@ public class LoginController {
   public String getUser(){
     return "Hello, User";
   }
-
-  @GetMapping("/admin")
-  public String getAdmin(){
-    return "Hello, Admin";
-  }
 }
