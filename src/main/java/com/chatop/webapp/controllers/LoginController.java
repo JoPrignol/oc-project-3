@@ -10,4 +10,9 @@ public class LoginController {
   public String getUser(){
     return "Hello, User";
   }
+
+  @GetMapping("/")
+	public String getGitHub() {
+		return "Welcome, GitHub user";
+	}
 }

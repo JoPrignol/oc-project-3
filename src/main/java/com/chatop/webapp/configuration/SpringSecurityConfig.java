@@ -22,7 +22,7 @@ public class SpringSecurityConfig {
 			auth.requestMatchers("/user").hasRole("USER");
 			// Faire en sorte que toutes les requêtes soient sécurisées
 			auth.anyRequest().authenticated();
-		}).formLogin(Customizer.withDefaults()).build();
+		}).formLogin(Customizer.withDefaults()).oauth2Login(Customizer.withDefaults()).build();
 	}
 
 	@Bean
