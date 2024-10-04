@@ -23,18 +23,4 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
-
-
-	// @Override
-	// public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-	// 	DBUser user = DBUserRepository.findByUsername(username);
-
-	// 	return new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user));
-	// }
-
-  // private List<GrantedAuthority> getGrantedAuthorities(DBUser user) {
-  //   List<GrantedAuthority> authorities = new ArrayList<>();
-  //   authorities.add(new SimpleGrantedAuthority(user.getRole()));
-  //   return authorities;
-  // }
 }
