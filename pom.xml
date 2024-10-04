@@ -34,24 +34,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-    <!-- à retirer -->
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency> -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
     </dependency>
-    <!-- à retirer -->
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+    <!-- <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-boot-starter</artifactId>
+      <version>3.0.0</version>
+    </dependency> -->
 
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -80,7 +76,43 @@
       <version>5.2.2</version>
     </dependency>
 
+<!-- SOLUTION POUR FAIRE FONCTIONNER SWAGGER -->
+    <!-- <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.plugin</groupId>
+    <artifactId>spring-plugin-core</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-boot-starter</artifactId>
+    <version>3.0.0</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency> -->
+
+
 	</dependencies>
+
+<!-- SOLUTION POUR FAIRE FONCTIONNER SWAGGER -->
+  <!-- <dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+    </dependencies>
+</dependencyManagement> -->
 
 	<build>
 		<plugins>
