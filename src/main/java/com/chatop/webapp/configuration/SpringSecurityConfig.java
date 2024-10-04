@@ -19,10 +19,14 @@ public class SpringSecurityConfig {
 	@Bean
 	public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests(auth -> {
-			auth.requestMatchers("/user").hasRole("USER");
+      // pour filtrer les requêtes en fonction des rôles (ne fonctionne pas avec les utilisateurs authentifiés via OAuth pour le moment)
+			//auth.requestMatchers("/user").hasRole("USER");
+      auth.requestMatchers("/user");
 			// Faire en sorte que toutes les requêtes soient sécurisées
 			auth.anyRequest().authenticated();
-		}).formLogin(Customizer.withDefaults()).oauth2Login(Customizer.withDefaults()).build();
+		}).formLogin(Customizer.withDefaults())
+    .oauth2Login(Customizer.withDefaults())
+    .build();
 	}
 
 	@Bean

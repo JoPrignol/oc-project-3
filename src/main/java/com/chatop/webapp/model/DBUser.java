@@ -62,7 +62,6 @@ public class DBUser {
     this.password = password;
   }
 
-
   public String getRole() {
     return roles;
   }

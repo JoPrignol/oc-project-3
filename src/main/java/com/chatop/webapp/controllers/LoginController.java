@@ -11,8 +11,8 @@ public class LoginController {
     return "Hello, User";
   }
 
-  @GetMapping("/")
-	public String getGitHub() {
-		return "Welcome, GitHub user";
-	}
+  // @GetMapping("/")
+	// public String getGitHub() {
+	// 	return "Welcome, GitHub user";
+	// }
 }
