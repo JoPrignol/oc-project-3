@@ -1,11 +1,8 @@
 package com.chatop.webapp.configuration;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,19 +14,27 @@ import com.chatop.webapp.repository.DBUserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-	@Autowired
-	private DBUserRepository DBUserRepository;
+    @Autowired
+    private DBUserRepository DBUserRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		DBUser user = DBUserRepository.findByUsername(username);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        DBUser user = DBUserRepository.findByUsername(username);
 
-		return new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user));
-	}
+        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+    }
 
-  private List<GrantedAuthority> getGrantedAuthorities(DBUser user) {
-    List<GrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority(user.getRole()));
-    return authorities;
-}
+
+	// @Override
+	// public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	// 	DBUser user = DBUserRepository.findByUsername(username);
+
+	// 	return new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user));
+	// }
+
+  // private List<GrantedAuthority> getGrantedAuthorities(DBUser user) {
+  //   List<GrantedAuthority> authorities = new ArrayList<>();
+  //   authorities.add(new SimpleGrantedAuthority(user.getRole()));
+  //   return authorities;
+  // }
 }
