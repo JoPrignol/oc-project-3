@@ -30,7 +30,7 @@ public class SpringSecurityConfig {
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(auth -> {
         auth.requestMatchers("/auth/login", "/auth/register").permitAll();
-      	auth.anyRequest().authenticated();})
+        auth.anyRequest().authenticated();})
         .httpBasic(Customizer.withDefaults())
         .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
         .build();
