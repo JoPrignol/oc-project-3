@@ -29,11 +29,18 @@ public class SpringSecurityConfig {
     return http.csrf(csrf -> csrf.disable())
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(auth -> {
-        auth.requestMatchers("/auth/login", "/auth/register").permitAll();
-        auth.anyRequest().authenticated();})
-        .httpBasic(Customizer.withDefaults())
-        .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-        .build();
+        auth.requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/logout").permitAll();
+        auth.anyRequest().authenticated();
+      })
+      .httpBasic(Customizer.withDefaults())
+      .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
+      // .logout(logout -> logout
+      //   .logoutUrl("/api/auth/logout")
+      //   .logoutSuccessUrl("/")
+      //   .invalidateHttpSession(true)
+      //   .deleteCookies("JSESSIONID")
+      // )
+      .build();
 	}
 
   Dotenv dotenv = Dotenv.configure().load();
