@@ -36,24 +36,24 @@ public class DBUserController {
         System.out.println("Authentication: " + authentication);
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(401).build(); // Unauthorized
+            return ResponseEntity.status(401).build();
         }
 
         System.out.println("USER IS AUTHENTICATED");
 
-        // Récupérer le nom de l'utilisateur (ou l'email) à partir de l'objet UserDetails
+        // Récupérer le nom de l'utilisateur
         String name = authentication.getName();
 
         System.out.println("NAME GOTTEN ==>" + name);
 
-        // Obtenez les détails de l'utilisateur depuis le service
+        // Obtenir les détails de l'utilisateur
         DBUser user = DBUserService.findUserByName(name);
         System.out.println("USER RETURNED ; USER = " + DBUserService.findUserByName(name));
         if (user == null) {
             return ResponseEntity.notFound().build(); // Not Found
         }
 
-        // Renvoie l'objet DBUser
         return ResponseEntity.ok(user);
+
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,25 +39,45 @@ public class DBRentalController {
   }
 
   @PostMapping("/rentals")
-    public ResponseEntity<DBRental> createRental(@RequestBody DBRental rental) {
+  public ResponseEntity<DBRental> createRental(@RequestBody DBRental rental) {
 
-        // Obtenir l'ID de l'utilisateur connecté
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      // Obtenir l'ID de l'utilisateur connecté
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-      if (authentication != null && authentication.isAuthenticated()) {
-        String username = authentication.getName();
-        DBUser user = dbUserRepository.findByName(username);
-        if (user != null) {
-            Long owner_id = user.getId();
-            rental.setOwner_id(owner_id);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    if (authentication != null && authentication.isAuthenticated()) {
+      String username = authentication.getName();
+      DBUser user = dbUserRepository.findByName(username);
+      if (user != null) {
+          Long owner_id = user.getId();
+          rental.setOwner_id(owner_id);
       } else {
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
-
-      DBRental createdRental = DBRentalService.save(rental);
-      return ResponseEntity.ok(createdRental);
+    } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    DBRental createdRental = DBRentalService.save(rental);
+    return ResponseEntity.ok(createdRental);
+  }
+
+  @PutMapping("/rentals/{id}")
+  public ResponseEntity<DBRental> updateRental(@PathVariable Long id, @RequestBody DBRental rental) {
+
+    DBRental selectedRental = DBRentalService.findById(id);
+    if (selectedRental == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    // Mise à jour des champs
+    selectedRental.setName(rental.getName());
+    selectedRental.setSurface(rental.getSurface());
+    selectedRental.setPrice(rental.getPrice());
+    selectedRental.setDescription(rental.getDescription());
+    selectedRental.setPicture(rental.getPicture()); // Assurez-vous que le nom du champ correspond à votre modèle
+
+    // Sauvegarde
+    DBRental updatedRental = DBRentalService.save(selectedRental);
+    return ResponseEntity.ok(updatedRental);
+  }
 }

@@ -34,13 +34,9 @@ public class LoginController {
 
   @PostMapping("/api/auth/register")
   public ResponseEntity<String> registerUser(@RequestBody DBUser newUser) {
-      // Vérifier si l'utilisateur existe déjà par nom
       if (dbUserRepository.findUserByName(newUser.getName()).isPresent()) {
           return ResponseEntity.status(400).body("This name already exists");
-      }
-
-      // Vérifier si l'utilisateur existe déjà par email
-      if (dbUserRepository.findByEmail(newUser.getEmail()).isPresent()) {
+      } else if (dbUserRepository.findByEmail(newUser.getEmail()).isPresent()) {
           return ResponseEntity.status(400).body("This email is already taken");
       }
 
@@ -59,19 +55,6 @@ public class LoginController {
   //     new SecurityContextLogoutHandler().logout(request, response, authentication);
   //   }
   //   return "User logged out successfully";
-  // }
-
-
-  // // Pour les tests de connexion
-  // @GetMapping("/api/user")
-  // public String getUser(){
-  //   return "Hello, User";
-  // }
-
-  // // Pour les tests de connexion
-  // @GetMapping("/")
-  // public String getResource(){
-  //   return "Login Test Successful";
   // }
 
 }
