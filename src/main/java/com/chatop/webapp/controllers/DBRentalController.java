@@ -1,12 +1,20 @@
 package com.chatop.webapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.webapp.model.DBRental;
+import com.chatop.webapp.model.DBUser;
+import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.services.DBRentalService;
 
 
@@ -16,6 +24,8 @@ public class DBRentalController {
 
   @Autowired
   private DBRentalService DBRentalService;
+  @Autowired
+  private DBUserRepository dbUserRepository;
 
   @GetMapping("/rentals")
   public Iterable<DBRental> findAll() {
@@ -26,4 +36,27 @@ public class DBRentalController {
   public DBRental getRentalById(@PathVariable Long id) {
     return DBRentalService.findById(id);
   }
+
+  @PostMapping("/rentals")
+    public ResponseEntity<DBRental> createRental(@RequestBody DBRental rental) {
+
+        // Obtenir l'ID de l'utilisateur connecté
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+      if (authentication != null && authentication.isAuthenticated()) {
+        String username = authentication.getName();
+        DBUser user = dbUserRepository.findByName(username);
+        if (user != null) {
+            Long owner_id = user.getId();
+            rental.setOwner_id(owner_id);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+      } else {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      }
+
+      DBRental createdRental = DBRentalService.save(rental);
+      return ResponseEntity.ok(createdRental);
+    }
 }

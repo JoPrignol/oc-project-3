@@ -23,4 +23,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new User(user.getName(), user.getPassword(), new ArrayList<>());
     }
-}
+
+    // public Long getId(String name) {
+    //   DBUser user = DBUserRepository.findByName(name);
+    //   return user.getId();
+    // }
+  }

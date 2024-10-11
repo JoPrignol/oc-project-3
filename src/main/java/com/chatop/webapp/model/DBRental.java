@@ -38,7 +38,7 @@ public class DBRental {
   private String description;
 
   @Column(name="owner_id")
-  private Long ownerId;
+  private Long owner_id;
 
   @CreationTimestamp
   @Column(name="created_at", updatable = false, nullable = false)

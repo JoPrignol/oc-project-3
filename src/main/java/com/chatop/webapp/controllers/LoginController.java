@@ -36,12 +36,12 @@ public class LoginController {
   public ResponseEntity<String> registerUser(@RequestBody DBUser newUser) {
       // Vérifier si l'utilisateur existe déjà par nom
       if (dbUserRepository.findUserByName(newUser.getName()).isPresent()) {
-          return ResponseEntity.status(400).body("Error: Name already exists");
+          return ResponseEntity.status(400).body("This name already exists");
       }
 
       // Vérifier si l'utilisateur existe déjà par email
       if (dbUserRepository.findByEmail(newUser.getEmail()).isPresent()) {
-          return ResponseEntity.status(400).body("Error: Email already exists");
+          return ResponseEntity.status(400).body("This email is already taken");
       }
 
       // Encoder le mot de passe avant de sauvegarder l'utilisateur

@@ -16,20 +16,14 @@ public class DBRentalService {
     private DBRentalRepository DBRentalRepository;
 
     public Iterable<DBRental> findAll() {
-        return DBRentalRepository.findAll();
+      return DBRentalRepository.findAll();
     }
 
     public DBRental findById(Long id) {
-        return DBRentalRepository.findById(id).orElse(null);
+      return DBRentalRepository.findById(id).orElse(null);
     }
 
     public DBRental save(DBRental DBRental) {
-        return DBRentalRepository.save(DBRental);
+      return DBRentalRepository.save(DBRental);
     }
-
-    // public void deleteById(Long id) {
-    //     DBRentalRepository.deleteById(id);
-    // }
-
-
 }
