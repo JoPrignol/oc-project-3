@@ -12,6 +12,8 @@ import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.services.JWTService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 public class LoginController {
 
@@ -21,6 +23,7 @@ public class LoginController {
     this.jwtService = jwtService;
   }
 
+  @Operation(summary = "Login to the application")
   @PostMapping("/api/auth/login")
   public String getToken(Authentication authentication){
     String token = jwtService.generateToken(authentication);
@@ -32,6 +35,7 @@ public class LoginController {
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+  @Operation(summary = "Register a new user")
   @PostMapping("/api/auth/register")
   public ResponseEntity<String> registerUser(@RequestBody DBUser newUser) {
       if (dbUserRepository.findUserByName(newUser.getName()).isPresent()) {

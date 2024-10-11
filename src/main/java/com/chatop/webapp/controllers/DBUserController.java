@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.services.DBUserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api")
 public class DBUserController {
@@ -19,16 +21,19 @@ public class DBUserController {
   @Autowired
   private DBUserService DBUserService;
 
+  @Operation(summary = "List all the users")
   @GetMapping("/users")
   public Iterable<DBUser> getAllUsers() {
     return DBUserService.findAll();
   }
 
+  @Operation(summary = "Get the user's informations")
   @GetMapping("/user/{id}")
   public DBUser getUserById(@PathVariable Long id) {
     return DBUserService.findById(id);
   }
 
+  @Operation(summary = "Get the current user's informations")
   @GetMapping("/auth/me")
     public ResponseEntity<DBUser> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

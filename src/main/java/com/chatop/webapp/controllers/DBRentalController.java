@@ -18,6 +18,8 @@ import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.services.DBRentalService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 @RestController
 @RequestMapping("/api")
@@ -28,16 +30,19 @@ public class DBRentalController {
   @Autowired
   private DBUserRepository dbUserRepository;
 
+  @Operation(summary = "List all the rentals")
   @GetMapping("/rentals")
   public Iterable<DBRental> findAll() {
       return DBRentalService.findAll();
   }
 
+  @Operation(summary = "Get the rental's informations")
   @GetMapping("/rentals/{id}")
   public DBRental getRentalById(@PathVariable Long id) {
     return DBRentalService.findById(id);
   }
 
+  @Operation(summary = "Create a new rental")
   @PostMapping("/rentals")
   public ResponseEntity<DBRental> createRental(@RequestBody DBRental rental) {
 
@@ -61,6 +66,7 @@ public class DBRentalController {
     return ResponseEntity.ok(createdRental);
   }
 
+  @Operation(summary = "Modify a rental's informations")
   @PutMapping("/rentals/{id}")
   public ResponseEntity<DBRental> updateRental(@PathVariable Long id, @RequestBody DBRental rental) {
 

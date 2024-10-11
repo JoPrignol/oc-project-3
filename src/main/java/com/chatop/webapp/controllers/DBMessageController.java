@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chatop.webapp.model.DBMessage;
 import com.chatop.webapp.services.DBMessageService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api")
 public class DBMessageController {
@@ -20,8 +22,9 @@ public class DBMessageController {
   @Autowired
   private DBMessageService dbMessageService;
 
-@PostMapping("/messages")
-public ResponseEntity<String> createMessage(@RequestBody DBMessage message) {
+  @Operation(summary = "Create a new message")
+  @PostMapping("/messages")
+  public ResponseEntity<String> createMessage(@RequestBody DBMessage message) {
     // Vérifiez si l'utilisateur est authentifié
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
