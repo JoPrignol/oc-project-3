@@ -2,8 +2,10 @@ package com.chatop.webapp.services;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -20,13 +22,17 @@ public class JWTService {
     this.jwtEncoder = jwtEncoder;
   }
 
-  public String generateToken(Authentication authentication) {
+  public String generateToken(User authenticatedUser) {
     Instant now = Instant.now();
+    String scope = authenticatedUser.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
     JwtClaimsSet claims = JwtClaimsSet.builder()
       .issuer("self")
       .issuedAt(now)
       .expiresAt(now.plus(1, ChronoUnit.DAYS))
-      .subject(authentication.getName())
+      .subject(authenticatedUser.getUsername())
+      .claim("scope", scope)
       .build();
 
     JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);

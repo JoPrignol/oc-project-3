@@ -62,6 +62,7 @@ public class DBRentalController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    // Renvoyer le message et pas l'objet créé
     DBRental createdRental = DBRentalService.save(rental);
     return ResponseEntity.ok(createdRental);
   }

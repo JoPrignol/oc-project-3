@@ -18,11 +18,22 @@ public class CustomUserDetailsService implements UserDetailsService {
     private DBUserRepository DBUserRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        DBUser user = DBUserRepository.findByName(name);
+    // public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+    //     DBUser user = DBUserRepository.findByName(name);
 
-        return new User(user.getName(), user.getPassword(), new ArrayList<>());
-    }
+    //     if (user == null) {
+    //       throw new UsernameNotFoundException("User not found");
+    //   }
+
+    //     return new User(user.getName(), user.getPassword(), new ArrayList<>());
+    // }
+
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+      DBUser user = DBUserRepository.findByEmail(email)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+      return new User(user.getEmail(), user.getPassword(), new ArrayList<>());
+  }
 
     // public Long getId(String name) {
     //   DBUser user = DBUserRepository.findByName(name);
