@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,9 +35,11 @@ public class DBMessage {
 
   @CreationTimestamp
   @Column(name="created_at", updatable = false, nullable = false)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
   private Timestamp createdAt;
 
   @UpdateTimestamp
   @Column(name="updated_at", nullable = false)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
   private Timestamp updatedAt;
 }
