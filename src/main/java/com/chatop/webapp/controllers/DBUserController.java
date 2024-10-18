@@ -1,6 +1,7 @@
 package com.chatop.webapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.webapp.model.DBUser;
+import com.chatop.webapp.requests.UserRequest;
 import com.chatop.webapp.services.DBUserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +30,25 @@ public class DBUserController {
   }
 
   @Operation(summary = "Get the user's informations")
-  @GetMapping("/user/{id}")
-  public DBUser getUserById(@PathVariable Long id) {
-    return DBUserService.findById(id);
+  @GetMapping(value = "/user/{id}", produces = "application/json")
+  public ResponseEntity<UserRequest> getUserById(@PathVariable Long id) {
+    DBUser user = DBUserService.findById(id);
+
+    if (user == null) {
+      // Retourner une réponse 404 si l'utilisateur n'est pas trouvé
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    // Mapper les données de DBUser à UserRequest
+    UserRequest userRequest = new UserRequest();
+    userRequest.setName(user.getName());
+    userRequest.setId(user.getId().toString());
+    userRequest.setEmail(user.getEmail());
+    userRequest.setCreated_at(user.getCreated_at().toString()); // Adapter le format si nécessaire
+    userRequest.setUpdated_at(user.getUpdated_at().toString()); // Adapter le format si nécessaire
+
+    // Retourner le DTO UserRequest
+    return ResponseEntity.ok(userRequest);
   }
 
   @Operation(summary = "Get the current user's informations")
