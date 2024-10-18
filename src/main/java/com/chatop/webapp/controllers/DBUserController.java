@@ -47,13 +47,13 @@ public class DBUserController {
         System.out.println("USER IS AUTHENTICATED");
 
         // Récupérer le nom de l'utilisateur
-        String name = authentication.getName();
+        String email = authentication.getName();
 
-        System.out.println("NAME GOTTEN ==>" + name);
+        System.out.println("NAME GOTTEN ==>" + email);
 
         // Obtenir les détails de l'utilisateur
-        DBUser user = DBUserService.findUserByName(name);
-        System.out.println("USER RETURNED ; USER = " + DBUserService.findUserByName(name));
+        DBUser user = DBUserService.findByEmail(email);
+        System.out.println("USER RETURNED ; USER = " + DBUserService.findByEmail(email));
         if (user == null) {
             return ResponseEntity.notFound().build(); // Not Found
         }

@@ -3,7 +3,6 @@ package com.chatop.webapp.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.requests.LoginRequest;
 import com.chatop.webapp.requests.RegisterRequest;
+import com.chatop.webapp.responses.LoginResponse;
 import com.chatop.webapp.services.DBUserService;
 import com.chatop.webapp.services.JWTService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -51,7 +47,7 @@ public class LoginController {
 
   @Operation(summary = "Login to the application")
   @PostMapping("/api/auth/login")
-  public ResponseEntity<String> login(@RequestBody @Valid LoginRequest loginRequest) {
+  public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
     try {
       Authentication authenticate = authenticationManager
       .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword()));
@@ -63,8 +59,10 @@ public class LoginController {
 
       logger.info("Tentative de connexion avec l'email : {}", loginRequest.getLogin());
 
-      return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
-      .body("User logged in successfully");
+      return ResponseEntity.ok(new LoginResponse(token));
+
+      // return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
+      // .body("User logged in successfully");
     } catch(BadCredentialsException ex) {
         logger.error("Login failed due to: ", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -98,15 +96,15 @@ public class LoginController {
       // appelle le service et je construis un nouvel user sur la base de register request
       dbUserService.createUserFromRegisterRequest(newUser);
 
-      return ResponseEntity.ok("User registered successfully");
+      return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/api/auth/logout")
-  public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-    if (authentication != null) {
-      new SecurityContextLogoutHandler().logout(request, response, authentication);
-    }
-    return "User logged out successfully";
-  }
+  // @GetMapping("/api/auth/logout")
+  // public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+  //   if (authentication != null) {
+  //     new SecurityContextLogoutHandler().logout(request, response, authentication);
+  //   }
+  //   return "User logged out successfully";
+  // }
 
 }

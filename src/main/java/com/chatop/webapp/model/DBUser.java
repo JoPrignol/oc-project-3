@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -37,11 +38,13 @@ public class DBUser {
 
   @CreationTimestamp
   @Column(name="created_at", updatable = false, nullable = false)
-  private Timestamp createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+  private Timestamp created_at;
 
   @UpdateTimestamp
   @Column(name="updated_at", nullable = false)
-  private Timestamp updatedAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+  private Timestamp updated_at;
 
   // Getters et setters
   public Long getId() {
@@ -75,4 +78,20 @@ public class DBUser {
   public void setPassword(String password) {
     this.password = password;
   }
+
+      public Timestamp getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Timestamp created_at) {
+        this.created_at = created_at;
+    }
+
+    public Timestamp getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Timestamp updated_at) {
+        this.updated_at = updated_at;
+    }
 }
