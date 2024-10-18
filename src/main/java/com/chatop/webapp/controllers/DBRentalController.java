@@ -1,5 +1,8 @@
 package com.chatop.webapp.controllers;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.webapp.model.DBRental;
 import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.services.DBRentalService;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -29,6 +36,8 @@ public class DBRentalController {
   private DBRentalService DBRentalService;
   @Autowired
   private DBUserRepository dbUserRepository;
+  @Autowired
+  private Cloudinary cloudinary;
 
   @Operation(summary = "List all the rentals")
   @GetMapping("/rentals")
@@ -42,9 +51,17 @@ public class DBRentalController {
     return DBRentalService.findById(id);
   }
 
+
+
   @Operation(summary = "Create a new rental")
-  @PostMapping("/rentals")
-  public ResponseEntity<DBRental> createRental(@RequestBody DBRental rental) {
+  @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })
+  public ResponseEntity<DBRental> createRental(
+    @RequestPart("name") String name,
+    @RequestPart("surface") int surface,
+    @RequestPart("price") int price,
+    @RequestPart("description") String description,
+    @RequestPart("picture") MultipartFile picture
+  ) {
 
       // Obtenir l'ID de l'utilisateur connecté
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,19 +70,40 @@ public class DBRentalController {
       String username = authentication.getName();
       DBUser user = dbUserRepository.findByName(username);
       if (user != null) {
-          Long owner_id = user.getId();
-          rental.setOwner_id(owner_id);
+        Long owner_id = user.getId();
+        DBRental rental = new DBRental();
+        rental.setName(name);
+        rental.setSurface(surface);
+        rental.setPrice(price);
+        rental.setDescription(description);
+        rental.setOwner_id(owner_id);
+
+        try {
+            if (!picture.isEmpty()) {
+                // Utilisation de Cloudinary pour l'upload du fichier
+                byte[] imageBytes = picture.getBytes();
+                Map<?, ?> uploadResult = cloudinary.uploader().upload(imageBytes, ObjectUtils.emptyMap());
+                String url = (String) uploadResult.get("url");
+                rental.setPicture(url);
+
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+        // Renvoyer le message et pas l'objet créé
+        DBRental createdRental = DBRentalService.save(rental);
+        return ResponseEntity.ok(createdRental);
+
       } else {
           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
     } else {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
-    // Renvoyer le message et pas l'objet créé
-    DBRental createdRental = DBRentalService.save(rental);
-    return ResponseEntity.ok(createdRental);
   }
+
+
 
   @Operation(summary = "Modify a rental's informations")
   @PutMapping("/rentals/{id}")
