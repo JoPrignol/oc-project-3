@@ -88,6 +88,7 @@ public class DBRentalController {
     return ResponseEntity.ok(response);
   }
 
+
   @Operation(summary = "Create a new rental")
   @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })
   public ResponseEntity<DBRental> createRental(
@@ -145,7 +146,7 @@ public class DBRentalController {
   }
 
 
-  // TODO: mettre en place cloudinary dans la méthode updateRental
+  // TODO: mettre en place le DTO
   @Operation(summary = "Modify a rental's informations")
   @PutMapping("/rentals/{id}")
   public ResponseEntity<DBRental> updateRental(

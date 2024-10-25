@@ -5,7 +5,6 @@ public class MessageRequest {
     private Long user_id;
     private Long rental_id;
 
-    // Getters et Setters
     public String getMessage() {
         return message;
     }
