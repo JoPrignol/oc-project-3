@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.chatop.webapp.model.DBMessage;
 import com.chatop.webapp.repository.DBMessageRepository;
+import com.chatop.webapp.requests.MessageRequest;
 
 import lombok.Data;
 
@@ -15,10 +16,12 @@ public class DBMessageService {
   @Autowired
   private DBMessageRepository dbMessageRepository;
 
-  public DBMessage createMessage(DBMessage message) {
-      // Si vous avez besoin d'ajouter des champs supplémentaires, faites-le ici
-      // message.setUserId(getCurrentUserId());
-      return dbMessageRepository.save(message);
-  }
+    public DBMessage createMessage(MessageRequest messageRequest) {
+        DBMessage message = new DBMessage();
+        message.setMessage(messageRequest.getMessage());
+        message.setUser_id(messageRequest.getUser_id());
+        message.setRental_id(messageRequest.getRental_id());
 
+        return dbMessageRepository.save(message);
+    }
 }

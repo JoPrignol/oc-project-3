@@ -7,10 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +16,7 @@ import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.requests.LoginRequest;
 import com.chatop.webapp.requests.RegisterRequest;
 import com.chatop.webapp.responses.LoginResponse;
+import com.chatop.webapp.services.AuthService;
 import com.chatop.webapp.services.DBUserService;
 import com.chatop.webapp.services.JWTService;
 
@@ -35,8 +32,11 @@ public class LoginController {
   private DBUserService dbUserService;
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+  @Autowired
   public JWTService jwtService;
+  @Autowired
+  public AuthService authService;
+
   private final AuthenticationManager authenticationManager;
   public Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -49,36 +49,21 @@ public class LoginController {
   @PostMapping("/api/auth/login")
   public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
     try {
-      Authentication authenticate = authenticationManager
-      .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword()));
+        // Appeler le service d'authentification pour obtenir le token
+        LoginResponse loginResponse = authService.login(loginRequest.getLogin(), loginRequest.getPassword());
 
-      User authenticatedUser = (User) authenticate.getPrincipal();
+        logger.info("Tentative de connexion avec l'email : {}", loginRequest.getLogin());
+        logger.info("Token généré : {}", loginResponse.getToken());
 
-      String token = jwtService.generateToken(authenticatedUser);
-      logger.info("Token is : " + token);
-
-      logger.info("Tentative de connexion avec l'email : {}", loginRequest.getLogin());
-
-      return ResponseEntity.ok(new LoginResponse(token));
-
-      // return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
-      // .body("User logged in successfully");
-    } catch(BadCredentialsException ex) {
-        logger.error("Login failed due to: ", ex);
+        return ResponseEntity.ok(loginResponse);
+    } catch (BadCredentialsException ex) {
+        logger.error("Login échoué en raison de : ", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    } catch (InternalAuthenticationServiceException ex) {
-        logger.error("Internal authentication service exception: ", ex);
+    } catch (Exception ex) {
+        logger.error("Erreur interne lors de l'authentification : ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-  }
-  // // authentication disparait et on prend username et password
-  // public String getToken(Authentication authentication){
-  //   // authentifier username et password (authencation manager permet d'appeler authenticate )
-  //   // Si authentication generation de token
-  //   String token = jwtService.generateToken(authentication);
-
-  //   return token;
-  // }
+}
 
   @Operation(summary = "Register a new user")
   @PostMapping("/api/auth/register")
@@ -98,13 +83,4 @@ public class LoginController {
 
       return ResponseEntity.ok().build();
   }
-
-  // @GetMapping("/api/auth/logout")
-  // public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-  //   if (authentication != null) {
-  //     new SecurityContextLogoutHandler().logout(request, response, authentication);
-  //   }
-  //   return "User logged out successfully";
-  // }
-
 }
