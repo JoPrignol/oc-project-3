@@ -7,6 +7,7 @@ import org.springframework.util.unit.DataSize;
 
 import jakarta.servlet.MultipartConfigElement;
 
+// TODO: vérifier l'utilité de cette config
 @Configuration
 public class MultipartConfig {
 

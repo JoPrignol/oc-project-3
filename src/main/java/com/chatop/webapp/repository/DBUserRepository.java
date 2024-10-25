@@ -10,6 +10,8 @@ import com.chatop.webapp.model.DBUser;
 @Repository
 public interface DBUserRepository extends JpaRepository<DBUser, Long> {
 
+  // TODO: nettoyer -> grouper les méthodes
+
   public DBUser findByName(String name);
   public Optional<DBUser> findUserByName(String name);
   Optional<DBUser> findByEmail(String email);

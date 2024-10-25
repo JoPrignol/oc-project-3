@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -149,7 +148,16 @@ public class DBRentalController {
   // TODO: mettre en place cloudinary dans la méthode updateRental
   @Operation(summary = "Modify a rental's informations")
   @PutMapping("/rentals/{id}")
-  public ResponseEntity<DBRental> updateRental(@PathVariable Long id, @RequestBody DBRental rental) {
+  public ResponseEntity<DBRental> updateRental(
+    @PathVariable Long id,
+    @RequestPart("name") String name,
+    @RequestPart("surface") String surfaceStr,
+    @RequestPart("price") String priceStr,
+    @RequestPart("description") String description) {
+
+    // Long id = Long.parseLong(idStr);
+    int surface = Integer.parseInt(surfaceStr);
+    int price = Integer.parseInt(priceStr);
 
     DBRental selectedRental = DBRentalService.findById(id);
     if (selectedRental == null) {
@@ -157,11 +165,10 @@ public class DBRentalController {
     }
 
     // Mise à jour des champs
-    selectedRental.setName(rental.getName());
-    selectedRental.setSurface(rental.getSurface());
-    selectedRental.setPrice(rental.getPrice());
-    selectedRental.setDescription(rental.getDescription());
-    selectedRental.setPicture(rental.getPicture());
+    selectedRental.setName(name);
+    selectedRental.setSurface(surface);
+    selectedRental.setPrice(price);
+    selectedRental.setDescription(description);
 
     // Sauvegarde
     DBRental updatedRental = DBRentalService.save(selectedRental);
