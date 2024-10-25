@@ -2,9 +2,9 @@ package com.chatop.webapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Bean;
 
-import com.cloudinary.Cloudinary;
+// import com.cloudinary.Cloudinary;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -22,9 +22,9 @@ public class ChatopApplication {
     SpringApplication.run(ChatopApplication.class, args);
   }
 
-    @Bean
-    public Cloudinary cloudinary() {
-      Dotenv dotenv = Dotenv.configure().load();
-      return new Cloudinary(dotenv.get("CLOUDINARY_URL"));
-    }
+    // @Bean
+    // public Cloudinary cloudinary() {
+    //   Dotenv dotenv = Dotenv.configure().load();
+    //   return new Cloudinary(dotenv.get("CLOUDINARY_URL"));
+    // }
 }

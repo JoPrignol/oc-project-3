@@ -89,25 +89,29 @@ public class DBRentalController {
     return ResponseEntity.ok(response);
   }
 
-
-
   @Operation(summary = "Create a new rental")
   @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })
   public ResponseEntity<DBRental> createRental(
     @RequestPart("name") String name,
-    @RequestPart("surface") int surface,
-    @RequestPart("price") int price,
+    @RequestPart("surface") String surfaceStr,
+    @RequestPart("price") String priceStr,
     @RequestPart("description") String description,
     @RequestPart("picture") MultipartFile picture
   ) {
+
+    // Convertir les valeurs en entiers
+    int surface = Integer.parseInt(surfaceStr);
+    int price = Integer.parseInt(priceStr);
 
       // Obtenir l'ID de l'utilisateur connecté
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     if (authentication != null && authentication.isAuthenticated()) {
       String username = authentication.getName();
-      DBUser user = dbUserRepository.findByName(username);
+      DBUser user = dbUserRepository.getUserByEmail(username);
+      System.err.println(user);
       if (user != null) {
+
         Long owner_id = user.getId();
         DBRental rental = new DBRental();
         rental.setName(name);
@@ -117,19 +121,19 @@ public class DBRentalController {
         rental.setOwner_id(owner_id);
 
         try {
-            if (!picture.isEmpty()) {
-                // Utilisation de Cloudinary pour l'upload du fichier
-                byte[] imageBytes = picture.getBytes();
-                Map<?, ?> uploadResult = cloudinary.uploader().upload(imageBytes, ObjectUtils.emptyMap());
-                String url = (String) uploadResult.get("url");
-                rental.setPicture(url);
-
-            }
+          if (!picture.isEmpty()) {
+              // Utilisation de Cloudinary pour l'upload du fichier
+              Map<?, ?> uploadResult = cloudinary.uploader().upload(picture.getBytes(), ObjectUtils.emptyMap());
+              String url = (String) uploadResult.get("url");
+              rental.setPicture(url);
+          }
         } catch (IOException e) {
+            rental.setPicture(null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
-        // Renvoyer le message et pas l'objet créé
+        // TODO: /!\ Renvoyer le message et pas l'objet créé /!\
+
         DBRental createdRental = DBRentalService.save(rental);
         return ResponseEntity.ok(createdRental);
 
@@ -142,7 +146,7 @@ public class DBRentalController {
   }
 
 
-
+  // TODO: mettre en place cloudinary dans la méthode updateRental
   @Operation(summary = "Modify a rental's informations")
   @PutMapping("/rentals/{id}")
   public ResponseEntity<DBRental> updateRental(@PathVariable Long id, @RequestBody DBRental rental) {
@@ -157,7 +161,7 @@ public class DBRentalController {
     selectedRental.setSurface(rental.getSurface());
     selectedRental.setPrice(rental.getPrice());
     selectedRental.setDescription(rental.getDescription());
-    selectedRental.setPicture(rental.getPicture()); // Assurez-vous que le nom du champ correspond à votre modèle
+    selectedRental.setPicture(rental.getPicture());
 
     // Sauvegarde
     DBRental updatedRental = DBRentalService.save(selectedRental);

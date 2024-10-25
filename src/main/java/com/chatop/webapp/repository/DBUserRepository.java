@@ -13,4 +13,5 @@ public interface DBUserRepository extends JpaRepository<DBUser, Long> {
   public DBUser findByName(String name);
   public Optional<DBUser> findUserByName(String name);
   Optional<DBUser> findByEmail(String email);
+  public DBUser getUserByEmail (String email);
 }
