@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.chatop.webapp.responses.MessageResponse;
 import com.chatop.webapp.responses.RentalResponse;
 import com.chatop.webapp.responses.RentalsResponse;
+import com.chatop.webapp.responses.SingleRentalResponse;
 import com.chatop.webapp.services.DBRentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,15 +42,16 @@ public class DBRentalController {
 
   @Operation(summary = "Get the rental's informations")
   @GetMapping(value = "/rentals/{id}", produces = "application/json")
-  public ResponseEntity<RentalResponse> getRentalById(@PathVariable Long id) {
-    RentalResponse response =  DBRentalService.findRentalResponseById(id);
+  public ResponseEntity<SingleRentalResponse> getRentalById(@PathVariable Long id) {
+    SingleRentalResponse response = DBRentalService.findRentalResponseById(id);
 
     if (response == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     return ResponseEntity.ok(response);
-  }
+}
+
 
   @Operation(summary = "Create a new rental")
   @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })
@@ -93,10 +95,11 @@ public class DBRentalController {
     int price = Integer.parseInt(priceStr);
 
     try {
-      DBRentalService.updateRental(id, name, surface, price, description);
-      return ResponseEntity.ok(new MessageResponse("Rental updated !"));
+        SingleRentalResponse updatedRental = DBRentalService.updateRental(id, name, surface, price, description);
+        return ResponseEntity.ok(new MessageResponse("Rental updated!"));
     } catch (IllegalArgumentException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-  }
+}
+
 }
