@@ -31,6 +31,7 @@ public class SpringSecurityConfig {
   private final Dotenv dotenv = Dotenv.configure().load();
   private final String jwtKey = dotenv.get("256_JWT_KEY");
 
+  // Permet de controller l'accès aux différentes routes
   @Bean
 	public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
     return http.csrf(csrf -> csrf.disable())

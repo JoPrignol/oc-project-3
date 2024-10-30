@@ -52,9 +52,9 @@ public class LoginController {
     try {
 
       // Appeler le service d'authentification pour obtenir le token
-      LoginResponse loginResponse = authService.login(loginRequest.getLogin(), loginRequest.getPassword());
+      LoginResponse loginResponse = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
 
-      logger.info("Tentative de connexion avec l'email : {}", loginRequest.getLogin());
+      logger.info("Tentative de connexion avec l'email : {}", loginRequest.getEmail());
       logger.info("Token généré : {}", loginResponse.getToken());
 
       return ResponseEntity.ok(loginResponse);

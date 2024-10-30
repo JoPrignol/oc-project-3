@@ -33,7 +33,7 @@ public class DBMessageController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
-    // Vérifiez que les paramètres requis ne sont pas nuls
+    // Vérifiez que tous les paramètres requis sont présents
     if (messageRequest.getMessage() == null || messageRequest.getUser_id() == null || messageRequest.getRental_id() == null) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }

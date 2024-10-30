@@ -43,21 +43,21 @@ public class DBUserController {
 
   @Operation(summary = "Get the current user's informations")
   @GetMapping("/auth/me")
-    public ResponseEntity<UserRequest> getCurrentUser() {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  public ResponseEntity<UserRequest> getCurrentUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-      if (authentication == null || !authentication.isAuthenticated()) {
-        return ResponseEntity.status(401).build();
-      }
-
-      String email = authentication.getName();
-
-      UserRequest user = DBUserService.getCurrentUserByEmail(email);
-
-      if (user == null) {
-        return ResponseEntity.notFound().build(); // Not Found
-      }
-
-      return ResponseEntity.ok(user);
+    if (authentication == null || !authentication.isAuthenticated()) {
+      return ResponseEntity.status(401).build();
     }
+
+    String email = authentication.getName();
+
+    UserRequest user = DBUserService.getCurrentUserByEmail(email);
+
+    if (user == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(user);
+  }
 }

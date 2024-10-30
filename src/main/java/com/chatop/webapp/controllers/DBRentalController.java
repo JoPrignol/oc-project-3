@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.webapp.responses.MessageResponse;
 import com.chatop.webapp.responses.RentalResponse;
+import com.chatop.webapp.responses.RentalsResponse;
 import com.chatop.webapp.services.DBRentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,9 +33,10 @@ public class DBRentalController {
 
   @Operation(summary = "List all the rentals")
   @GetMapping(value = "/rentals", produces = "application/json")
-  public ResponseEntity<Iterable<RentalResponse>> findAll() {
+  public ResponseEntity<RentalsResponse> findAll() {
     Iterable<RentalResponse> rentalResponses = DBRentalService.findAllRentalResponses();
-    return ResponseEntity.ok(rentalResponses);
+    RentalsResponse response = new RentalsResponse(rentalResponses);
+    return ResponseEntity.ok(response);
   }
 
   @Operation(summary = "Get the rental's informations")
@@ -48,7 +50,6 @@ public class DBRentalController {
 
     return ResponseEntity.ok(response);
   }
-
 
   @Operation(summary = "Create a new rental")
   @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })

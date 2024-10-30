@@ -1,13 +1,12 @@
 package com.chatop.webapp.responses;
 
-import java.util.List;
-
 public class RentalResponse {
     private Long id;
     private String name;
     private int surface;
     private int price;
-    private List<String> picture;
+    // private List<String> picture;
+    private String picture;
     private String description;
     private Long owner_id;
     private String created_at;
@@ -45,11 +44,19 @@ public class RentalResponse {
         this.price = price;
     }
 
-    public List<String> getPicture() {
+    // public List<String> getPicture() {
+    //   return picture;
+    // }
+
+    // public void setPicture(List<String> picture) {
+    //   this.picture = picture;
+    // }
+
+    public String getPicture() {
       return picture;
     }
 
-    public void setPicture(List<String> picture) {
+    public void setPicture(String picture) {
       this.picture = picture;
     }
 

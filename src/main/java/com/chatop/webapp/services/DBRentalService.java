@@ -1,7 +1,6 @@
 package com.chatop.webapp.services;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -55,7 +54,7 @@ public class DBRentalService {
     response.setPrice(rental.getPrice());
     response.setDescription(rental.getDescription());
     response.setOwner_id(rental.getOwner_id());
-    response.setPicture(Collections.singletonList(rental.getPicture()));
+    response.setPicture(rental.getPicture());
     response.setCreated_at(rental.getCreated_at().toString());
     response.setUpdated_at(rental.getUpdated_at().toString());
 
@@ -74,7 +73,7 @@ public class DBRentalService {
             response.setPrice(rental.getPrice());
             response.setDescription(rental.getDescription());
             response.setOwner_id(rental.getOwner_id());
-            response.setPicture(Collections.singletonList(rental.getPicture()));
+            response.setPicture(rental.getPicture());
             response.setCreated_at(rental.getCreated_at().toString());
             response.setUpdated_at(rental.getUpdated_at().toString());
             return response;
@@ -117,7 +116,7 @@ public class DBRentalService {
       response.setPrice(savedRental.getPrice());
       response.setDescription(savedRental.getDescription());
       response.setOwner_id(savedRental.getOwner_id());
-      response.setPicture(Collections.singletonList(savedRental.getPicture()));
+      response.setPicture(savedRental.getPicture());
       response.setCreated_at(savedRental.getCreated_at().toString());
       response.setUpdated_at(savedRental.getUpdated_at().toString());
 
@@ -144,7 +143,7 @@ public class DBRentalService {
       response.setPrice(updatedRental.getPrice());
       response.setDescription(updatedRental.getDescription());
       response.setOwner_id(updatedRental.getOwner_id());
-      response.setPicture(Collections.singletonList(updatedRental.getPicture()));
+      response.setPicture(updatedRental.getPicture());
       response.setCreated_at(updatedRental.getCreated_at().toString());
       response.setUpdated_at(updatedRental.getUpdated_at().toString());
 
