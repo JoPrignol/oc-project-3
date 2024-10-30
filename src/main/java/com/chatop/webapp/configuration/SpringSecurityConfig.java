@@ -36,17 +36,16 @@ public class SpringSecurityConfig {
     return http.csrf(csrf -> csrf.disable())
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(auth -> {
-        auth.requestMatchers("/api/auth/login", "/api/auth/register").permitAll();
+        auth.requestMatchers(
+          "/api/auth/login",
+          "/api/auth/register",
+          "/v3/api-docs/**",
+          "/swagger-ui/**",
+          "/swagger-ui.html"
+        ).permitAll();
         auth.anyRequest().authenticated();
       })
-      // .httpBasic(Customizer.withDefaults()) // A modifier (supprimer)
       .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-      // .logout(logout -> logout
-      //   .logoutUrl("/api/auth/logout")
-      //   .logoutSuccessUrl("/")
-      //   .invalidateHttpSession(true)
-      //   .deleteCookies("JSESSIONID")
-      // )
       .build();
     }
 
