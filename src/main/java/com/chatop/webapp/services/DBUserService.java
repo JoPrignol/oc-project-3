@@ -20,26 +20,26 @@ public class DBUserService {
   private DBUserRepository DBUserRepository;
 
     public Iterable<UserRequest> findAll() {
-        // Récupère tous les utilisateurs et les transforme en UserRequest
-        return DBUserRepository.findAll().stream()
-                .map(user -> {
-                    UserRequest userRequest = new UserRequest();
-                    userRequest.setName(user.getName());
-                    userRequest.setId(user.getId().toString());
-                    userRequest.setEmail(user.getEmail());
-                    userRequest.setCreated_at(user.getCreated_at().toString());
-                    userRequest.setUpdated_at(user.getUpdated_at().toString());
-                    return userRequest;
-                })
-                .collect(Collectors.toList());
+      // Récupère tous les utilisateurs et les transforme en UserRequest
+      return DBUserRepository.findAll().stream()
+            .map(user -> {
+              UserRequest userRequest = new UserRequest();
+              userRequest.setName(user.getName());
+              userRequest.setId(user.getId().toString());
+              userRequest.setEmail(user.getEmail());
+              userRequest.setCreated_at(user.getCreated_at().toString());
+              userRequest.setUpdated_at(user.getUpdated_at().toString());
+              return userRequest;
+            })
+            .collect(Collectors.toList());
     }
 
     public DBUser findById(Long id) {
       return DBUserRepository.findById(id).orElse(null);
     }
 
-    public DBUser findByEmail(String email) {
-      return DBUserRepository.findByEmail(email).orElse(null);
+    public DBUser findUserByEmail(String email) {
+      return DBUserRepository.findUserByEmail(email).orElse(null);
     }
 
     public DBUser findUserByName(String name) {
@@ -47,34 +47,34 @@ public class DBUserService {
     }
 
     public DBUser createUserFromRegisterRequest(RegisterRequest request) {
-        // Créer un nouvel objet DBUser
-        DBUser newUser = new DBUser();
+      // Créer un nouvel objet DBUser
+      DBUser newUser = new DBUser();
 
-        // Mapper les champs de RegisterRequest à DBUser
-        newUser.setName(request.getName());
-        newUser.setEmail(request.getEmail());
-        newUser.setPassword(request.getPassword());  // Encoder le mot de passe
+      // Mapper les champs de RegisterRequest à DBUser
+      newUser.setName(request.getName());
+      newUser.setEmail(request.getEmail());
+      newUser.setPassword(request.getPassword());
 
-        // Sauvegarder l'utilisateur dans la base de données
-        return DBUserRepository.save(newUser);
+      // Sauvegarder l'utilisateur dans la base de données
+      return DBUserRepository.save(newUser);
     }
 
     public UserRequest getUserById(Long id) {
-        DBUser user = DBUserRepository.findById(id).orElse(null);
+      DBUser user = DBUserRepository.findById(id).orElse(null);
 
-        // Mapper DBUser vers UserRequest
-        UserRequest userRequest = new UserRequest();
-        userRequest.setName(user.getName());
-        userRequest.setId(user.getId().toString());
-        userRequest.setEmail(user.getEmail());
-        userRequest.setCreated_at(user.getCreated_at().toString());
-        userRequest.setUpdated_at(user.getUpdated_at().toString());
+      // Mapper DBUser vers UserRequest
+      UserRequest userRequest = new UserRequest();
+      userRequest.setName(user.getName());
+      userRequest.setId(user.getId().toString());
+      userRequest.setEmail(user.getEmail());
+      userRequest.setCreated_at(user.getCreated_at().toString());
+      userRequest.setUpdated_at(user.getUpdated_at().toString());
 
-        return userRequest;
+      return userRequest;
     }
 
     public UserRequest getCurrentUserByEmail(String email) {
-      DBUser user = DBUserRepository.findByEmail(email).orElse(null);
+      DBUser user = DBUserRepository.findUserByEmail(email).orElse(null);
 
       UserRequest userRequest = new UserRequest();
         userRequest.setName(user.getName());

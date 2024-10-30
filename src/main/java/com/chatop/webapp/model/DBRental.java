@@ -52,7 +52,6 @@ public class DBRental {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
   private Timestamp updated_at;
 
-  // Getters et setters
   public Long getId() {
     return id;
   }

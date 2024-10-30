@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-//import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 @SpringBootApplication
 @EnableSwagger2
 public class ChatopApplication {
@@ -18,10 +16,4 @@ public class ChatopApplication {
 
     SpringApplication.run(ChatopApplication.class, args);
   }
-
-    // @Bean
-    // public Cloudinary cloudinary() {
-    //   Dotenv dotenv = Dotenv.configure().load();
-    //   return new Cloudinary(dotenv.get("CLOUDINARY_URL"));
-    // }
 }

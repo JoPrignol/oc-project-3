@@ -28,8 +28,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
-  private Dotenv dotenv = Dotenv.configure().load();
-  private String jwtKey = dotenv.get("256_JWT_KEY");
+  private final Dotenv dotenv = Dotenv.configure().load();
+  private final String jwtKey = dotenv.get("256_JWT_KEY");
 
   @Bean
 	public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
@@ -49,13 +49,11 @@ public class SpringSecurityConfig {
       .build();
     }
 
-
   @Bean
   public JwtDecoder jwtDecoder() {
     SecretKeySpec secretKey = new SecretKeySpec(this.jwtKey.getBytes(), 0, this.jwtKey.getBytes().length,"RSA");
-    // return NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
-
     NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
+
     // Vérifier l'expiration du jeton
     jwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer("self"));
 
@@ -67,7 +65,6 @@ public class SpringSecurityConfig {
     return new NimbusJwtEncoder(new ImmutableSecret<>(this.jwtKey.getBytes()));
   }
 
-
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -75,14 +72,12 @@ public class SpringSecurityConfig {
 
   @Bean
   public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder,
-          UserDetailsService userDetailService) throws Exception {
-      AuthenticationManagerBuilder authenticationManagerBuilder =
-              http.getSharedObject(AuthenticationManagerBuilder.class);
+  UserDetailsService userDetailService) throws Exception {
+    AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
-      authenticationManagerBuilder
-              .userDetailsService(userDetailService)
-              .passwordEncoder(bCryptPasswordEncoder);
-
-      return authenticationManagerBuilder.build();
+    authenticationManagerBuilder
+            .userDetailsService(userDetailService)
+            .passwordEncoder(bCryptPasswordEncoder);
+    return authenticationManagerBuilder.build();
   }
 }

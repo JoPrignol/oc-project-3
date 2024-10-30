@@ -13,33 +13,32 @@ public class RentalResponse {
     private String created_at;
     private String updated_at;
 
-    // Getters et Setters
     public Long getId() {
-        return id;
+      return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+      this.id = id;
     }
 
     public String getName() {
-        return name;
+      return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+      this.name = name;
     }
 
     public int getSurface() {
-        return surface;
+      return surface;
     }
 
     public void setSurface(int surface) {
-        this.surface = surface;
+      this.surface = surface;
     }
 
     public int getPrice() {
-        return price;
+      return price;
     }
 
     public void setPrice(int price) {
@@ -47,42 +46,42 @@ public class RentalResponse {
     }
 
     public List<String> getPicture() {
-        return picture;
+      return picture;
     }
 
     public void setPicture(List<String> picture) {
-        this.picture = picture;
+      this.picture = picture;
     }
 
     public String getDescription() {
-        return description;
+      return description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+      this.description = description;
     }
 
     public Long getOwner_id() {
-        return owner_id;
+      return owner_id;
     }
 
     public void setOwner_id(Long owner_id) {
-        this.owner_id = owner_id;
+      this.owner_id = owner_id;
     }
 
     public String getCreated_at() {
-        return created_at;
+      return created_at;
     }
 
     public void setCreated_at(String created_at) {
-        this.created_at = created_at;
+      this.created_at = created_at;
     }
 
     public String getUpdated_at() {
-        return updated_at;
+      return updated_at;
     }
 
     public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+      this.updated_at = updated_at;
     }
 }

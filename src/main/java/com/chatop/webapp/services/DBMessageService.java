@@ -17,11 +17,11 @@ public class DBMessageService {
   private DBMessageRepository dbMessageRepository;
 
     public DBMessage createMessage(MessageRequest messageRequest) {
-        DBMessage message = new DBMessage();
-        message.setMessage(messageRequest.getMessage());
-        message.setUser_id(messageRequest.getUser_id());
-        message.setRental_id(messageRequest.getRental_id());
+      DBMessage message = new DBMessage();
+      message.setMessage(messageRequest.getMessage());
+      message.setUser_id(messageRequest.getUser_id());
+      message.setRental_id(messageRequest.getRental_id());
 
-        return dbMessageRepository.save(message);
+      return dbMessageRepository.save(message);
     }
 }

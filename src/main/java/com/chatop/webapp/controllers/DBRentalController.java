@@ -59,27 +59,25 @@ public class DBRentalController {
     @RequestPart("description") String description,
     @RequestPart("picture") MultipartFile picture
   ) {
+      int surface = Integer.parseInt(surfaceStr);
+      int price = Integer.parseInt(priceStr);
 
-    int surface = Integer.parseInt(surfaceStr);
-    int price = Integer.parseInt(priceStr);
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication == null || !authentication.isAuthenticated()) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      }
 
-    if (authentication == null || !authentication.isAuthenticated()) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      String email = authentication.getName();
+      try {
+          DBRentalService.createRental(name, surface, price, description, picture, email);
+          return ResponseEntity.ok(new MessageResponse("Rental created !"));
+      } catch (IllegalArgumentException e) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      } catch (IOException e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+      }
     }
-
-    String email = authentication.getName();
-    try {
-        DBRentalService.createRental(name, surface, price, description, picture, email);
-        return ResponseEntity.ok(new MessageResponse("Rental created !"));
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    } catch (IOException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
-}
-
 
   @Operation(summary = "Modify a rental's informations")
   @PutMapping("/rentals/{id}")
@@ -94,10 +92,10 @@ public class DBRentalController {
     int price = Integer.parseInt(priceStr);
 
     try {
-        DBRentalService.updateRental(id, name, surface, price, description);
-        return ResponseEntity.ok(new MessageResponse("Rental updated !"));
+      DBRentalService.updateRental(id, name, surface, price, description);
+      return ResponseEntity.ok(new MessageResponse("Rental updated !"));
     } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
   }
 }
