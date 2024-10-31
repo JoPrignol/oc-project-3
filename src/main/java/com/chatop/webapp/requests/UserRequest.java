@@ -1,5 +1,7 @@
 package com.chatop.webapp.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserRequest {
   private String name;
   private String id;
@@ -45,5 +47,10 @@ public class UserRequest {
 
   public void setUpdated_at(String updated_at) {
     this.updated_at = updated_at;
+  }
+
+  @JsonProperty("id")
+  public Long getIdAsLong() {
+    return id != null ? Long.parseLong(id) : null;
   }
 }
