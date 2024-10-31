@@ -1,6 +1,8 @@
 package com.chatop.webapp.services;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -14,6 +16,7 @@ import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.repository.DBRentalRepository;
 import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.responses.RentalResponse;
+import com.chatop.webapp.responses.SingleRentalResponse;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
@@ -44,22 +47,28 @@ public class DBRentalService {
     return DBRentalRepository.save(DBRental);
   }
 
-  public RentalResponse findRentalResponseById(Long id) {
+  public SingleRentalResponse findRentalResponseById(Long id) {
     DBRental rental = DBRentalRepository.findById(id).orElse(null);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-    RentalResponse response = new RentalResponse();
+    if (rental == null) {
+        return null;
+    }
+
+    SingleRentalResponse response = new SingleRentalResponse();
     response.setId(rental.getId());
     response.setName(rental.getName());
     response.setSurface(rental.getSurface());
     response.setPrice(rental.getPrice());
     response.setDescription(rental.getDescription());
     response.setOwner_id(rental.getOwner_id());
-    response.setPicture(rental.getPicture());
-    response.setCreated_at(rental.getCreated_at().toString());
-    response.setUpdated_at(rental.getUpdated_at().toString());
+    response.setPicture(Collections.singletonList(rental.getPicture()));
+    response.setCreated_at(rental.getCreated_at().toLocalDateTime().format(formatter));
+    response.setUpdated_at(rental.getUpdated_at().toLocalDateTime().format(formatter));
 
     return response;
-  }
+}
+
 
   public Iterable<RentalResponse> findAllRentalResponses() {
       Iterable<DBRental> rentals = DBRentalRepository.findAll();
@@ -123,30 +132,31 @@ public class DBRentalService {
       return response;
   }
 
-    public RentalResponse updateRental(Long id, String name, int surface, int price, String description) {
-      DBRental rental = DBRentalRepository.findById(id).orElse(null);
-      if (rental == null) {
+  public SingleRentalResponse updateRental(Long id, String name, int surface, int price, String description) {
+    DBRental rental = DBRentalRepository.findById(id).orElse(null);
+    if (rental == null) {
         throw new IllegalArgumentException("Rental not found");
-      }
+    }
 
-      rental.setName(name);
-      rental.setSurface(surface);
-      rental.setPrice(price);
-      rental.setDescription(description);
+    rental.setName(name);
+    rental.setSurface(surface);
+    rental.setPrice(price);
+    rental.setDescription(description);
 
-      DBRental updatedRental = DBRentalRepository.save(rental);
+    DBRental updatedRental = DBRentalRepository.save(rental);
 
-      RentalResponse response = new RentalResponse();
-      response.setId(updatedRental.getId());
-      response.setName(updatedRental.getName());
-      response.setSurface(updatedRental.getSurface());
-      response.setPrice(updatedRental.getPrice());
-      response.setDescription(updatedRental.getDescription());
-      response.setOwner_id(updatedRental.getOwner_id());
-      response.setPicture(updatedRental.getPicture());
-      response.setCreated_at(updatedRental.getCreated_at().toString());
-      response.setUpdated_at(updatedRental.getUpdated_at().toString());
+    SingleRentalResponse response = new SingleRentalResponse();
+    response.setId(updatedRental.getId());
+    response.setName(updatedRental.getName());
+    response.setSurface(updatedRental.getSurface());
+    response.setPrice(updatedRental.getPrice());
+    response.setDescription(updatedRental.getDescription());
+    response.setOwner_id(updatedRental.getOwner_id());
+    response.setPicture(Collections.singletonList(updatedRental.getPicture())); // Convertir en tableau
+    response.setCreated_at(updatedRental.getCreated_at().toString());
+    response.setUpdated_at(updatedRental.getUpdated_at().toString());
 
-      return response;
-  }
+    return response;
+}
+
 }
