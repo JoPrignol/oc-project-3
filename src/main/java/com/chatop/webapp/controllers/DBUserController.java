@@ -27,11 +27,13 @@ public class DBUserController {
   public ResponseEntity<Iterable<UserRequest>> getAllUsers() {
     Iterable<UserRequest> users = DBUserService.findAll();
     return ResponseEntity.ok(users);
-}
+  }
 
   @Operation(summary = "Get the user's informations")
   @GetMapping(value = "/user/{id}", produces = "application/json")
   public ResponseEntity<UserRequest> getUserById(@PathVariable Long id) {
+
+    // Récupération des informations de l'utilisateur
     UserRequest userRequest = DBUserService.getUserById(id);
 
     if (userRequest == null) {
@@ -44,6 +46,8 @@ public class DBUserController {
   @Operation(summary = "Get the current user's informations")
   @GetMapping("/auth/me")
   public ResponseEntity<UserRequest> getCurrentUser() {
+
+    // Récupération de l'utilisateur actuellement connecté
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     if (authentication == null || !authentication.isAuthenticated()) {

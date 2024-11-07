@@ -35,6 +35,7 @@ public class DBRentalController {
   @Operation(summary = "List all the rentals")
   @GetMapping(value = "/rentals", produces = "application/json")
   public ResponseEntity<RentalsResponse> findAll() {
+    // Création d'une liste de toutes les locations de type RentalsResponse
     Iterable<RentalResponse> rentalResponses = DBRentalService.findAllRentalResponses();
     RentalsResponse response = new RentalsResponse(rentalResponses);
     return ResponseEntity.ok(response);
@@ -56,23 +57,28 @@ public class DBRentalController {
   @Operation(summary = "Create a new rental")
   @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })
   public ResponseEntity<MessageResponse> createRental(
+    // Passage des paramètres requis pour créer une location
     @RequestPart("name") String name,
     @RequestPart("surface") String surfaceStr,
     @RequestPart("price") String priceStr,
     @RequestPart("description") String description,
     @RequestPart("picture") MultipartFile picture
   ) {
+      // Conversion des paramètres en entiers
       int surface = Integer.parseInt(surfaceStr);
       int price = Integer.parseInt(priceStr);
 
+      // Vérification de l'authentification de l'utilisateur
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
       if (authentication == null || !authentication.isAuthenticated()) {
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
       }
 
+      // Récupération de l'email de l'utilisateur pour l'associer à la location
       String email = authentication.getName();
       try {
+        // Création de la location
           DBRentalService.createRental(name, surface, price, description, picture, email);
           return ResponseEntity.ok(new MessageResponse("Rental created !"));
       } catch (IllegalArgumentException e) {

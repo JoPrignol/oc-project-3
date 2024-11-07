@@ -5,7 +5,6 @@ public class RentalResponse {
     private String name;
     private int surface;
     private int price;
-    // private List<String> picture;
     private String picture;
     private String description;
     private Long owner_id;
@@ -43,14 +42,6 @@ public class RentalResponse {
     public void setPrice(int price) {
         this.price = price;
     }
-
-    // public List<String> getRentalPicture() {
-    //   return picture;
-    // }
-
-    // public void setRentalPicture(List<String> picture) {
-    //   this.picture = picture;
-    // }
 
     public String getPicture() {
       return picture;

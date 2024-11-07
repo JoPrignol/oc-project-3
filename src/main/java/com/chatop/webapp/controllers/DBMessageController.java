@@ -26,20 +26,24 @@ public class DBMessageController {
   @Operation(summary = "Create a new message")
   @PostMapping("/messages")
   public ResponseEntity<MessageResponse> createMessage(@RequestBody MessageRequest messageRequest) {
+
     // Vérifiez si l'utilisateur est authentifié
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+    // Refuser l'accès si l'utilisateur n'est pas authentifié
     if (authentication == null || !authentication.isAuthenticated()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
-    // Vérifiez que tous les paramètres requis sont présents
+    // Vérifiez que tous les paramètres requis sont présents et renvoyez une erreur si ce n'est pas le cas
     if (messageRequest.getMessage() == null || messageRequest.getUser_id() == null || messageRequest.getRental_id() == null) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
+    // Envoi du message
     dbMessageService.createMessage(messageRequest);
 
+    // Réponse renvoyée si le message est créé
     return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Message created successfully."));
 }
 
