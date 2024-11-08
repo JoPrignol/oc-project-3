@@ -15,6 +15,7 @@ import com.chatop.webapp.responses.MessageResponse;
 import com.chatop.webapp.services.DBMessageService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +24,7 @@ public class DBMessageController {
   @Autowired
   private DBMessageService dbMessageService;
 
-  @Operation(summary = "Create a new message")
+  @Operation(summary = "Create a new message", security = @SecurityRequirement(name = "bearerAuth"))
   @PostMapping("/messages")
   public ResponseEntity<MessageResponse> createMessage(@RequestBody MessageRequest messageRequest) {
 

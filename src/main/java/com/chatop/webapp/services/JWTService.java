@@ -13,10 +13,14 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 @Service
 public class JWTService {
 
-  private JwtEncoder jwtEncoder;
+  private final JwtEncoder jwtEncoder;
+  private final Dotenv dotenv = Dotenv.configure().load();
+  private final int jwtExpirationDays = Integer.parseInt(dotenv.get("JWT_EXPIRATION_DAYS", "1"));
 
   public JWTService(JwtEncoder jwtEncoder) {
     this.jwtEncoder = jwtEncoder;
@@ -33,7 +37,7 @@ public class JWTService {
     JwtClaimsSet claims = JwtClaimsSet.builder()
       .issuer("self")
       .issuedAt(now)
-      .expiresAt(now.plus(1, ChronoUnit.DAYS))
+      .expiresAt(now.plus(jwtExpirationDays, ChronoUnit.DAYS))
       .subject(authenticatedUser.getUsername())
       .claim("scope", scope)
       .build();

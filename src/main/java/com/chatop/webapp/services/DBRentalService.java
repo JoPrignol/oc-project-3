@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chatop.webapp.exception.RentalNotFoundException;
 import com.chatop.webapp.model.DBRental;
 import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.repository.DBRentalRepository;
@@ -40,7 +41,7 @@ public class DBRentalService {
   }
 
   public DBRental findById(Long id) {
-    return DBRentalRepository.findById(id).orElse(null);
+    return DBRentalRepository.findById(id).orElseThrow(() -> new RentalNotFoundException("Rental not found"));
   }
 
   public DBRental save(DBRental DBRental) {
@@ -48,7 +49,7 @@ public class DBRentalService {
   }
 
   public SingleRentalResponse findRentalResponseById(Long id) {
-    DBRental rental = DBRentalRepository.findById(id).orElse(null);
+    DBRental rental = DBRentalRepository.findById(id).orElseThrow(() -> new RentalNotFoundException("Rental not found"));
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     if (rental == null) {
@@ -133,7 +134,7 @@ public class DBRentalService {
   }
 
   public SingleRentalResponse updateRental(Long id, String name, int surface, int price, String description) {
-    DBRental rental = DBRentalRepository.findById(id).orElse(null);
+    DBRental rental = DBRentalRepository.findById(id).orElseThrow(() -> new RentalNotFoundException("Rental not found"));
     if (rental == null) {
         throw new IllegalArgumentException("Rental not found");
     }

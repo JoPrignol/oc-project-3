@@ -58,20 +58,11 @@ public class LoginController {
       // Appeler le service d'authentification pour obtenir le token
       LoginResponse loginResponse = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
 
-      logger.info("Tentative de connexion avec l'email : {}", loginRequest.getEmail());
-      logger.info("Token généré : {}", loginResponse.getToken());
-
       return ResponseEntity.ok(loginResponse);
 
     }catch (BadCredentialsException ex) {
 
-      logger.error("Login échoué en raison de : ", ex);
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-    }catch (Exception ex) {
-
-      logger.error("Erreur interne lors de l'authentification : ", ex);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      throw new BadCredentialsException("Invalid credentials provided.");
 
     }
 }

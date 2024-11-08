@@ -6,9 +6,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.chatop.webapp.exception.BadCredentialsException;
 import com.chatop.webapp.responses.LoginResponse;
 
 @Service
@@ -33,7 +33,7 @@ public class AuthService {
 
       return new LoginResponse(token);
     } catch (Exception ex) {
-      throw new UsernameNotFoundException("Authentication failed", ex);
+      throw new BadCredentialsException("Invalid credentials provided.");
     }
   }
 }

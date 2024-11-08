@@ -23,6 +23,11 @@ import com.chatop.webapp.responses.SingleRentalResponse;
 import com.chatop.webapp.services.DBRentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 
 @RestController
@@ -32,7 +37,40 @@ public class DBRentalController {
   @Autowired
   private DBRentalService DBRentalService;
 
-  @Operation(summary = "List all the rentals")
+  @Operation(summary = "List all the rentals",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "List of rentals",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = RentalsResponse.class),
+                    examples = @ExampleObject(
+                        value = """
+                        {
+                            "rentals": [
+                                {
+                                    "id": 0,
+                                    "name": "string",
+                                    "surface": 0,
+                                    "price": 0,
+                                    "picture": [
+                                      "string"
+                                    ],
+                                    "description": "string",
+                                    "owner_id": 0,
+                                    "created_at": "string",
+                                    "updated_at": "string"
+                                }
+                            ]
+                        }
+                        """
+                    )
+                )
+            )
+        }
+  )
   @GetMapping(value = "/rentals", produces = "application/json")
   public ResponseEntity<RentalsResponse> findAll() {
     // Création d'une liste de toutes les locations de type RentalsResponse
@@ -41,7 +79,7 @@ public class DBRentalController {
     return ResponseEntity.ok(response);
   }
 
-  @Operation(summary = "Get the rental's informations")
+  @Operation(summary = "Get the rental's informations", security = @SecurityRequirement(name = "bearerAuth"))
   @GetMapping(value = "/rentals/{id}", produces = "application/json")
   public ResponseEntity<SingleRentalResponse> getRentalById(@PathVariable Long id) {
     SingleRentalResponse response = DBRentalService.findRentalResponseById(id);
@@ -54,7 +92,7 @@ public class DBRentalController {
 }
 
 
-  @Operation(summary = "Create a new rental")
+  @Operation(summary = "Create a new rental", security = @SecurityRequirement(name = "bearerAuth"))
   @PostMapping(value = "/rentals", consumes = { "multipart/form-data" })
   public ResponseEntity<MessageResponse> createRental(
     // Passage des paramètres requis pour créer une location
@@ -88,7 +126,7 @@ public class DBRentalController {
       }
     }
 
-  @Operation(summary = "Modify a rental's informations")
+  @Operation(summary = "Modify a rental's informations", security = @SecurityRequirement(name = "bearerAuth"))
   @PutMapping("/rentals/{id}")
   public ResponseEntity<MessageResponse> updateRental(
     @PathVariable Long id,
