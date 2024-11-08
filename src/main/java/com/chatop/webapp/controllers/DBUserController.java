@@ -14,6 +14,7 @@ import com.chatop.webapp.requests.UserRequest;
 import com.chatop.webapp.services.DBUserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api")
@@ -22,16 +23,18 @@ public class DBUserController {
   @Autowired
   private DBUserService DBUserService;
 
-  @Operation(summary = "List all the users")
+  @Operation(summary = "List all the users", security = @SecurityRequirement(name = "bearerAuth"))
   @GetMapping("/users")
   public ResponseEntity<Iterable<UserRequest>> getAllUsers() {
     Iterable<UserRequest> users = DBUserService.findAll();
     return ResponseEntity.ok(users);
-}
+  }
 
-  @Operation(summary = "Get the user's informations")
+  @Operation(summary = "Get the user's informations", security = @SecurityRequirement(name = "bearerAuth"))
   @GetMapping(value = "/user/{id}", produces = "application/json")
   public ResponseEntity<UserRequest> getUserById(@PathVariable Long id) {
+
+    // Récupération des informations de l'utilisateur
     UserRequest userRequest = DBUserService.getUserById(id);
 
     if (userRequest == null) {
@@ -41,9 +44,11 @@ public class DBUserController {
     return ResponseEntity.ok(userRequest);
   }
 
-  @Operation(summary = "Get the current user's informations")
+  @Operation(summary = "Get the current user's informations", security = @SecurityRequirement(name = "bearerAuth"))
   @GetMapping("/auth/me")
   public ResponseEntity<UserRequest> getCurrentUser() {
+
+    // Récupération de l'utilisateur actuellement connecté
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     if (authentication == null || !authentication.isAuthenticated()) {

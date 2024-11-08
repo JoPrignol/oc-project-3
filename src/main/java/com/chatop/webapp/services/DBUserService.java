@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chatop.webapp.exception.EmailAlreadyRegisteredException;
+import com.chatop.webapp.exception.UserNotFoundException;
 import com.chatop.webapp.model.DBUser;
 import com.chatop.webapp.repository.DBUserRepository;
 import com.chatop.webapp.requests.RegisterRequest;
@@ -35,18 +37,23 @@ public class DBUserService {
     }
 
     public DBUser findById(Long id) {
-      return DBUserRepository.findById(id).orElse(null);
+      return DBUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public DBUser findUserByEmail(String email) {
-      return DBUserRepository.findUserByEmail(email).orElse(null);
+      return DBUserRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public DBUser findUserByName(String name) {
-      return DBUserRepository.findUserByName(name).orElse(null);
+      return DBUserRepository.findUserByName(name).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public DBUser createUserFromRegisterRequest(RegisterRequest request) {
+
+      if(DBUserRepository.findUserByEmail(request.getEmail()).isPresent()) {
+        throw new EmailAlreadyRegisteredException("Email already registered");
+      }
+
       // Créer un nouvel objet DBUser
       DBUser newUser = new DBUser();
 
@@ -60,7 +67,7 @@ public class DBUserService {
     }
 
     public UserRequest getUserById(Long id) {
-      DBUser user = DBUserRepository.findById(id).orElse(null);
+      DBUser user = DBUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
 
       // Mapper DBUser vers UserRequest
       UserRequest userRequest = new UserRequest();
@@ -74,7 +81,7 @@ public class DBUserService {
     }
 
     public UserRequest getCurrentUserByEmail(String email) {
-      DBUser user = DBUserRepository.findUserByEmail(email).orElse(null);
+      DBUser user = DBUserRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
 
       UserRequest userRequest = new UserRequest();
         userRequest.setName(user.getName());
