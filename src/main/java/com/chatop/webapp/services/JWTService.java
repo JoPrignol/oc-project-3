@@ -38,7 +38,7 @@ public class JWTService {
       .claim("scope", scope)
       .build();
 
-    // Création des paramètres d'encodage du token (algorithme de signqture et claims)
+    // Création des paramètres d'encodage du token (algorithme de signature et claims)
     JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
     // Génétration et encodage du token selon les paramètres définis
