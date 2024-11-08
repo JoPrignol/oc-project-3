@@ -23,10 +23,13 @@ public class JWTService {
   }
 
   public String generateToken(User authenticatedUser) {
+    // initialisation de la date actuelle (pour gérer la date d'expiration du token)
     Instant now = Instant.now();
+    // Récupération des rôles de l'utilisateur authentifié
     String scope = authenticatedUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
+    // Les claims sont les informations a stocker dans le token
     JwtClaimsSet claims = JwtClaimsSet.builder()
       .issuer("self")
       .issuedAt(now)
@@ -35,8 +38,10 @@ public class JWTService {
       .claim("scope", scope)
       .build();
 
+    // Création des paramètres d'encodage du token (algorithme de signqture et claims)
     JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
+    // Génétration et encodage du token selon les paramètres définis
     return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
   }
 
